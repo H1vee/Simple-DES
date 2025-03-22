@@ -194,8 +194,85 @@ std::bitset<4> SDES::fFunction(const std::bitset<4> &r, const std::bitset<8> &su
     return p4Permutation(sBoxOutput);
 }
 
+std::bitset<8>SDES::encryptBlock(const std::bitset<8> &plainText) {
+    std::bitset<8> ip = inititalPermutation(plainText);
+
+    std::bitset<4> left,right;
+
+    for (int i = 0; i < 4; i++) {
+        left[i] = ip[i+4];
+        right[i] = ip[i];
+    }
+
+    std::bitset<4>fOut = fFunction(right,k1);
+    std::bitset<4>newRight = left^fOut;
+
+    std::bitset<4>newLeft = right;
 
 
+    fOut = fFunction(newRight,k2);
+    std::bitset<4> finalLeft = newLeft^fOut;
+    std::bitset<4> finalRight = newRight;
 
+    std::bitset<8> combined;
+    for (int i = 0; i < 4; i++) {
+        combined[i]= finalRight[i];
+        combined[i+4] = finalLeft[i];
+    }
 
+    return inverseInititalPermutation(combined);
+}
+
+std::bitset<8>SDES::decryptBlock(const std::bitset<8> &plainText) {
+    std::bitset<8> ip = inititalPermutation(plainText);
+
+    std::bitset<4> left,right;
+    for (int i = 0; i < 4; i++) {
+        left[i] = ip[i+4];
+        right[i] = ip[i];
+    }
+    std::bitset<4>fOut = fFunction(right,k1);
+    std::bitset<4>newRight = left^fOut;
+
+    std::bitset<4>newLeft = right;
+
+    fOut = fFunction(newLeft,k1);
+    std::bitset<4> finalLeft = newLeft^fOut;
+    std::bitset<4> finalRight = newRight;
+
+    std::bitset<8> combined;
+
+    for (int i = 0; i < 4; i++) {
+        combined[i] = finalRight[i];
+        combined[i+4] = finalLeft[i];
+    }
+
+    return inverseInititalPermutation(combined);
+}
+
+std::string SDES::encrypt(const std::string& &plainText) {
+
+    std::string binary = textToBinary(plainText);
+    std::string encryptedBinary;
+
+    while (binary.length()%8 != 0) {
+        binary += "0";
+    }
+
+    for (size_t i = 0; i < binary.length(); i+=8) {
+        std::string blockStr = binary.substr(i,8);
+        std::bitset<8> block;
+
+        for (int j = 0; j < 8; j++) {
+            block[7-j] = (blockStr[j]=='1');
+        }
+
+        std::bitset<8> encryptedBlock = encryptBlock(block);
+
+        for (int j = 7; j >= 0; j--) {
+            encryptedBinary+=encryptedBlock[j];
+        }
+    }
+    return binaryToText(encryptedBinary);
+}
 
