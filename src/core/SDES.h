@@ -36,7 +36,7 @@ private:
   std::bitset<4> fFunction(const std::bitset<4>& r,const std::bitset<8>& subkey);
   std::bitset<8> expandAndPermute(const std::bitset<4>& r);
   std::bitset<4> sBox(const std::bitset<8>& bits);
-  std::bitset<8> p4Permutation(const std::bitset<4>& bits);
+  std::bitset<4> p4Permutation(const std::bitset<4>& bits);
 
   std::bitset<10> permute10(const std::bitset<10>& bits);
   std::bitset<8> permute8(const std::bitset<10>& bits);

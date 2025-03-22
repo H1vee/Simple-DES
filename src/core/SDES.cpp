@@ -174,3 +174,28 @@ std::bitset<4> SDES::sBox(const std::bitset<8> &bits) {
     return result;
 }
 
+std::bitset<4>SDES::p4Permutation(const std::bitset<4> &bits) {
+    std::bitset<4> result;
+    result[3] = bits[4-2];
+    result[2] = bits[4-4];
+    result[1] = bits[4-3];
+    result[0] = bits[4-1];
+
+    return result;
+}
+
+std::bitset<4> SDES::fFunction(const std::bitset<4> &r, const std::bitset<8> &subkey) {
+    std::bitset<8>expanded = expandAndPermute(r);
+
+    expanded^=subkey;
+
+    std::bitset<4>sBoxOutput = sBox(expanded);
+
+    return p4Permutation(sBoxOutput);
+}
+
+
+
+
+
+
