@@ -140,3 +140,37 @@ std::bitset<8> SDES::expandAndPermute(const std::bitset<4> &r) {
     return result;
 }
 
+std::bitset<4> SDES::sBox(const std::bitset<8> &bits) {
+    int S0[4][4]={
+        {1,0,3,2},
+        {3,2,1,0},
+        {0,2,1,3},
+        {3,1,3,2}
+    };
+
+    int S1[4][4]={
+    {0,1,2,3},
+        {2,0,1,3},
+        {3,0,1,0},
+        {2,1,0,3}
+    };
+
+
+    int row0 = (bits[7] << 1)|bits[4];
+    int col0 = (bits[6] << 1)|bits[5];
+
+    int row1 = (bits[3] << 1)|bits[0];
+    int col1 = (bits[2] << 1)|bits[1];
+
+    int val0 = S0[row0][col0];
+    int val1 = S1[row1][col1];
+
+    std::bitset<4> result;
+    result[3]=(val0 >> 1) & 1;
+    result[2]=val0 & 1;
+    result[1]=(val1 >> 1) & 1;
+    result[0]=val1 & 1;
+
+    return result;
+}
+
