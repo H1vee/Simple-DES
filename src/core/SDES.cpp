@@ -276,3 +276,23 @@ std::string SDES::encrypt(const std::string& &plainText) {
     return binaryToText(encryptedBinary);
 }
 
+std::string SDES::decrypt(const std::string& &cipherText) {
+    std::string binary = textToBinary(cipherText);
+    std::string decryptedBinary;
+
+    for (size_t i = 0; i < binary.length(); i+=8) {
+        std::string blockStr = binary.substr(i,8);
+        std::bitset<8> block;
+
+        for (int j = 0; j < 8; j++) {
+            block[7-j] = (blockStr[j]=='1');
+        }
+
+        std::bitset<8> decryptedBlock = decryptBlock(block);
+
+        for (int j = 7; j >= 0; j--) {
+            decryptedBinary += decryptedBlock[j]?"1":"0";
+        }
+    }
+    return binaryToText(decryptedBinary);
+}
