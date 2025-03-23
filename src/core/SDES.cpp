@@ -296,3 +296,30 @@ std::string SDES::decrypt(const std::string& &cipherText) {
     }
     return binaryToText(decryptedBinary);
 }
+
+
+std::string SDES::textToBinary(const std::string &text) {
+
+    std::string binary;
+    for ( char c : text ) {
+        std::bitset<8> bits(c);
+        for (int i = 7; i >= 0; i--) {
+            binary += bits[i]?"1":"0";
+        }
+    }
+    return binary;
+}
+
+
+std::string SDES::binaryToText(const std::string &binary) {
+    std::string text;
+    for (size_t i = 0; i < binary.length(); i+=8) {
+        std::string byte = binary.substr(i,8);
+        char c = 0;
+        for (int j = 0; j < 8; j++) {
+            c = (c << 1) | (byte[j]=='1');
+        }
+        text += c;
+    }
+    return text;
+}
