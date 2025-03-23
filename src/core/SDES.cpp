@@ -250,7 +250,7 @@ std::bitset<8>SDES::decryptBlock(const std::bitset<8> &plainText) {
     return inverseInititalPermutation(combined);
 }
 
-std::string SDES::encrypt(const std::string& &plainText) {
+std::string SDES::encrypt(const std::string& plainText) {
 
     std::string binary = textToBinary(plainText);
     std::string encryptedBinary;
@@ -276,7 +276,7 @@ std::string SDES::encrypt(const std::string& &plainText) {
     return binaryToText(encryptedBinary);
 }
 
-std::string SDES::decrypt(const std::string& &cipherText) {
+std::string SDES::decrypt(const std::string& cipherText) {
     std::string binary = textToBinary(cipherText);
     std::string decryptedBinary;
 
