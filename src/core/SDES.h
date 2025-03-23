@@ -7,7 +7,7 @@
 #include <vector>
 #include <bitset>
 #include <string>
-
+#include <QDebug>
 
 class SDES {
 public:
@@ -31,8 +31,8 @@ private:
 
   void generateSubKeys();
 
-  std::bitset<8> inititalPermutation(const std::bitset<8>& block);
-  std::bitset<8> inverseInititalPermutation(const std::bitset<8>& block);
+  std::bitset<8> initialPermutation(const std::bitset<8>& block);
+  std::bitset<8> inverseInitialPermutation(const std::bitset<8>& block);
   std::bitset<4> fFunction(const std::bitset<4>& r,const std::bitset<8>& subkey);
   std::bitset<8> expandAndPermute(const std::bitset<4>& r);
   std::bitset<4> sBox(const std::bitset<8>& bits);

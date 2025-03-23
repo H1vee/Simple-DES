@@ -8,7 +8,7 @@
 #include <QObject>
 #include <QString>
 #include "../core/SDES.h"
-
+#include <QDebug>
 class CryptoBridge: public QObject {
 
     Q_OBJECT
@@ -17,13 +17,11 @@ public:
     explicit CryptoBridge(QObject *parent = nullptr);
 
 public slots:
-    bool setKey(const  QString &key);
+    Q_INVOKABLE void setKey(const QString& key);
 
-    bool isKeyValid() const;
+    Q_INVOKABLE void encrypt(const  QString &plainText);
 
-    QString encrypt(const  QString &plainText);
-
-    QString decrypt(const  QString &cipherText);
+    Q_INVOKABLE void decrypt(const  QString &cipherText);
 
     QString textToBinary(const  QString &text);
     QString binaryToText(const QString &binary);
@@ -31,7 +29,6 @@ public slots:
 signals:
 
     void keyChanged(bool valid);
-
     void encryptionCompleted(const QString& result);
     void decryptionCompleted(const QString& result);
 

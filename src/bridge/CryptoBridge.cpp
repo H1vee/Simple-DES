@@ -8,31 +8,38 @@ CryptoBridge::CryptoBridge(QObject *parent):QObject(parent), keyValid(false) {
 
 }
 
-bool CryptoBridge::isKeyValid()const {
-    return keyValid;
+void CryptoBridge::setKey(const QString &key) {
+    const std::string strKey = key.toStdString();
+    keyValid = sdes.setKey(strKey);
+
+    emit keyChanged(keyValid);
 }
 
-QString CryptoBridge::encrypt(const QString& plainText) {
+void CryptoBridge::encrypt(const QString& plainText) {
     if (!keyValid) {
         emit encryptionCompleted("Error: Key not set");
-        return "Error: Key not set";
+        return;
     }
+    qDebug()<< "Encrypting text:" << plainText;
     const std::string result = sdes.encrypt(plainText.toStdString());
-    QString qResult = QString::fromStdString(result);
+
+    qDebug() << "Encryption result:" << QString::fromStdString(result);
+
+    const QString qResult = QString::fromStdString(result);
+
+    // Emit the signal with the result
     emit encryptionCompleted(qResult);
-    return qResult;
 }
 
 
-QString CryptoBridge::decrypt(const QString& cipherText) {
+void CryptoBridge::decrypt(const QString& cipherText) {
     if (!keyValid) {
         emit decryptionCompleted("Error: Key not set");
-        return "Error: Key not set";
+        return;
     }
     const std::string result = sdes.decrypt(cipherText.toStdString());
     QString qResult = QString::fromStdString(result);
     emit decryptionCompleted(qResult);
-    return qResult;
 }
 
 QString CryptoBridge::textToBinary(const QString& text) {
